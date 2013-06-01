@@ -34,6 +34,16 @@ function compile(str, path) {
         .use(nib());
 }
 
+function render_index(player_number, stats_number, players) {
+    res.render('index',
+        {
+            title: 'My Game',
+            player_num: player_number,
+            stats_num: stats_number,
+            player_list: players
+        });
+}
+
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.logger('dev'))
@@ -66,20 +76,15 @@ app.get('/', function (req, res) {
             console.log(players);
         });
 
+        console.log('Statistics');
         database.get("SELECT COUNT(*) FROM players", function (err, row) {
             player_number = row;
         });
         database.get("SELECT COUNT(*) FROM stats", function (err, row) {
             stats_number = row;
+            render_index(player_number, stats_number, players);
         });
 
-        res.render('index',
-            {
-                title: 'My Game',
-                player_num: player_number,
-                stats_num: stats_number,
-                player_list: players
-            });
     });
 });
 
