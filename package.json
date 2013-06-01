@@ -7,6 +7,6 @@
         "jade": "*",
         "stylus": "*",
         "nib": "*",
-        "sqlite3": "*",
+        "sqlite3": "*"
     }
 }
