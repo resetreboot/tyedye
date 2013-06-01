@@ -72,6 +72,8 @@ app.get('/', function (req, res) {
             players.push(row.name);
         });
 
+        console.log(players);
+
         res.render('index',
             {
                 title: 'My Game',
