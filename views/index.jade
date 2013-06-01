@@ -7,7 +7,7 @@ block content
         | Stats registered: #{stats_num}
     p
         ul
-            if player_list
+            if player_list.length > 0
                 each player in player_list
                     li #{player}
 
