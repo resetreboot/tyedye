@@ -5,6 +5,11 @@ block content
         | Registered players: #{player_num}
     p
         | Stats registered: #{stats_num}
+    p
+        ul
+            each player in player_list
+                li #{player.name}
+
 block sidebar
     .widget
         h1 Access
