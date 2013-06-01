@@ -56,6 +56,7 @@ app.get('/', function (req, res) {
     var stats_number = 0;
     var players = new Array();
 
+    console.log('Serializing');
     database.serialize(function() {
         database.get("SELECT COUNT(*) FROM players", function (err, row) {
             player_number = row;
@@ -63,10 +64,12 @@ app.get('/', function (req, res) {
         database.get("SELECT COUNT(*) FROM stats", function (err, row) {
             stats_number = row;
         });
+        console.log('Querying players');
 
         database.each("SELECT * FROM players", function(err, row) {
-            players.push(row["name"]);
+            players.push(row.name);
         });
+        console.log('Query finished');
     });
 
     res.render('index',
