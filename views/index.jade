@@ -7,8 +7,9 @@ block content
         | Stats registered: #{stats_num}
     p
         ul
-            each player in player_list
-                li #{player.name}
+            if player_list
+                each player in player_list
+                    li #{player.name}
 
 block sidebar
     .widget
