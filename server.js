@@ -65,7 +65,7 @@ app.get('/', function (req, res) {
         });
 
         database.each("SELECT * FROM players", function(err, row) {
-            players.push(row.name);
+            players.push(row["name"]);
         });
     });
 
