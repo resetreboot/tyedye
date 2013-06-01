@@ -71,17 +71,15 @@ app.get('/', function (req, res) {
             console.log(row.name);
             players.push(row.name);
         });
-        console.log('Query finished');
-    });
-    console.log(players);
 
-    res.render('index',
-        {
-            title: 'My Game',
-            player_num: player_number,
-            stats_num: stats_number,
-            player_list: players
-        });
+        res.render('index',
+            {
+                title: 'My Game',
+                player_num: player_number,
+                stats_num: stats_number,
+                player_list: players
+            });
+    });
 });
 
 app.listen(3000);
