@@ -71,6 +71,7 @@ app.get('/', function (req, res) {
         });
         console.log('Query finished');
     });
+    console.log(players);
 
     res.render('index',
         {
