@@ -58,19 +58,19 @@ app.get('/', function (req, res) {
 
     console.log('Serializing');
     database.serialize(function() {
-        database.get("SELECT COUNT(*) FROM players", function (err, row) {
-            player_number = row;
-        });
-        database.get("SELECT COUNT(*) FROM stats", function (err, row) {
-            stats_number = row;
-        });
         console.log('Querying players');
-
         database.each("SELECT * FROM players", function(err, row) {
             console.log('Received a player row! Weheeeee!');
             var nextElement = players.length;
             players[nextElement] = row.name;
             console.log(players);
+        });
+
+        database.get("SELECT COUNT(*) FROM players", function (err, row) {
+            player_number = row;
+        });
+        database.get("SELECT COUNT(*) FROM stats", function (err, row) {
+            stats_number = row;
         });
 
         res.render('index',
