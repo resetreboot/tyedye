@@ -25,7 +25,7 @@ var express = require('express')
 
 var app = express();
 
-var database = new sqlite.Database('game.db');
+var database = new sqlite.Database('/home/reset/tyedye/game.db');
 
 // Custom compile function for using nib alongside stylus
 function compile(str, path) {
