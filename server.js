@@ -67,6 +67,7 @@ app.get('/', function (req, res) {
         console.log('Querying players');
 
         database.each("SELECT * FROM players", function(err, row) {
+            console.log(row.name);
             players.push(row.name);
         });
         console.log('Query finished');
