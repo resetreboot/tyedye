@@ -53,14 +53,19 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
     var player_number = 0;
+    var stats_number = 0;
     database.get("SELECT COUNT(*) FROM players", function (err, row) {
         player_number = row;
+    });
+    database.get("SELECT COUNT(*) FROM stats", function (err, row) {
+        stats_number = row;
     });
 
     res.render('index',
         {
             title: 'My Game',
-            player_num: player_number
+            player_num: player_number,
+            stats_num: stats_number
         });
 });
 
