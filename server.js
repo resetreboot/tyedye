@@ -68,12 +68,10 @@ app.get('/', function (req, res) {
 
         database.each("SELECT * FROM players", function(err, row) {
             console.log('Received a player row! Weheeeee!');
-            console.log(row.name);
             var nextElement = players.length;
             players[nextElement] = row.name;
+            console.log(players);
         });
-
-        console.log(players);
 
         res.render('index',
             {
