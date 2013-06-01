@@ -45,8 +45,14 @@ app.use(stylus.middleware(
 app.use(express.static(__dirname + '/public'));
 
 // Simple test call
+// app.get('/', function (req, res) {
+//     res.send('Hi there!!');
+// });
+
 app.get('/', function (req, res) {
-    res.send('Hi there!!');
+    res.render('index',
+        { title: 'Home' }
+        );
 });
 
 app.listen(3000);
