@@ -53,8 +53,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
     var player_number = 0;
-    database.get("SELECT COUNT(*) FROM players", function (err, row) {
-        player_number = row;
+    database.get("SELECT * FROM players", function (err, row) {
+        player_number = row.count;
     });
 
     res.render('index',
