@@ -25,6 +25,8 @@ var express = require('express')
 
 var app = express();
 
+var database = new sqlite3.Database('game.db');
+
 // Custom compile function for using nib alongside stylus
 function compile(str, path) {
     return stylus(str)
@@ -50,9 +52,16 @@ app.use(express.static(__dirname + '/public'));
 // });
 
 app.get('/', function (req, res) {
+    var player_number = 0;
+    database.get("SELECT COUNT(*) FROM players", function (err, row) {
+        player_number = row;
+    });
+
     res.render('index',
-        { title: 'My Game' }
-        );
+        {
+            title: 'My Game',
+            player_num: player_number
+        });
 });
 
 app.listen(3000);
