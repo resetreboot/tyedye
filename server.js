@@ -56,15 +56,17 @@ app.get('/', function (req, res) {
     var stats_number = 0;
     var players = new Array();
 
-    database.get("SELECT COUNT(*) FROM players", function (err, row) {
-        player_number = row;
-    });
-    database.get("SELECT COUNT(*) FROM stats", function (err, row) {
-        stats_number = row;
-    });
+    database.serialize(function() {
+        database.get("SELECT COUNT(*) FROM players", function (err, row) {
+            player_number = row;
+        });
+        database.get("SELECT COUNT(*) FROM stats", function (err, row) {
+            stats_number = row;
+        });
 
-    database.each("SELECT * FROM players", function(err, row) {
-        players.push(row);
+        database.each("SELECT * FROM players", function(err, row) {
+            players.push(row);
+        });
     });
 
     res.render('index',
