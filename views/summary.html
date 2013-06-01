@@ -1,0 +1,9 @@
+$def with (game_name, player_num, stats_num, player_list)
+<h2>$game_name quick summary</h2>
+<p>Registered players: $player_num</p>
+<p>Registered stats: $stats_num</p>
+<p>Player list:<br />
+<ul>
+$for player in player_list:
+    <li>$player</li>
+</ul>

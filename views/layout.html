@@ -1,0 +1,25 @@
+$def with (main_block, sidebar_block, game_name)
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TyeDye for $game_name</title>
+        <link rel='stylesheet' type='text/css' href='/static/main.css'>
+    </head>
+    <body>
+        <header>
+            <h1>TyeDye $game_name</h1>
+        </header>
+        <div class='container'>
+            <div class='main-content'>
+                $:main_block
+            </div>
+            <div class='sidebar'>
+                $:sidebar_block
+            </div>
+        </div>
+        <footer>
+            <p>Under GPL License v3</p>
+        </footer>
+    </body>
+</html>
+
