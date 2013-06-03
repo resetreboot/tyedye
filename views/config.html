@@ -1,14 +1,7 @@
-$def with (game_name, stats, add_stat_form)
-<h2>$game_name stat list</h2>
-<ul>
-$for stat in stats:
-    <li>$stat.name (default: $stat.default_value)
-        <a href="/app/config/edit/$stat.id">[edit]</a>&nbsp;
-        <a href="/app/config/remove/$stat.id">[remove]</a>
-    </li>
-</ul>
-<div class="stat_form">
-    <form name="add_stat_form" method="post" action="config/add">
-        $:add_stat_form
+$def with (config_form)
+<h2>Main game configuration</h2>
+<div class="config_form">
+    <form name="config_form" method="post" action="config">
+        $:config_form
     </form>
 </div>
