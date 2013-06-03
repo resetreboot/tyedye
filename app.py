@@ -105,22 +105,46 @@ class remove_stat(object):
         db.delete('stats', where = 'id = $index', vars = locals())
         raise web.seeother('/app/config')
 
+
 class edit_stat(object):
     def GET(self, index_to_remove):
         game_name = "My Game"
         try:
             index = int(index_to_remove)
 
+            for s in db.select('stats', where = 'id = $index', vars = locals()):
+                stat_info = s
+
+            edit_form = add_stat()
+            edit_stat_form = edit_form.render() 
+            edit_stat = render.edit_stat(stat_info, edit_stat_form)
+
+            return render_web(game_name, edit_stat)
+
         except Exception as e:
             return "Ooops! Wrong index!"
 
-        for s in db.select('stats', where = 'id = $index', vars = locals()):
-            stat_info = s
+    def POST(self, index_to_edit):
+        try:
+            if "/" in index_to_edit:
+                final_index = index_to_edit.split("/")[-1]
+            
+            else:
+                final_index = index_to_edit
 
-        edit_stat_form = add_stat.render()
-        edit_stat = render.edit_stat(stat_info, edit_stat_form)
+            index = int(final_index)
+            form = add_stat()
+            if form.validates():
+                db.update('stats', 
+                          where = 'id = $index', 
+                          name = form.d.stat_name, 
+                          default_value = form.d.default_value, 
+                          vars = locals())
 
-        return render_web(game_name, edit_stat)
+            raise web.seeother('/app/config')
+
+        except Exception as e:
+            return "Ooops! Wrong index! %s" % str(e)
 
 
 

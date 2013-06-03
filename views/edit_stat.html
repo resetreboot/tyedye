@@ -1,7 +1,8 @@
 $def with (stat_info, edit_stat_form)
 <h2>Editing $stat_info.name stat</h2>
+<p>Stat current default value: $stat_info.default_value</p>
 <div class="stat_form">
-    <form name="edit_stat_form" method="post" action="config/edit">
+    <form name="edit_stat_form" method="post" action="config/edit/$stat_info.id">
         $:edit_stat_form
     </form>
 </div>
