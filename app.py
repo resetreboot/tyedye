@@ -26,6 +26,7 @@ urls = (
     '/app/player_edit/(.+)', 'edit_player',
     '/app/config', 'config',
     '/app/config/', 'config',
+    '/query/(.+)', 'query',
 )
 
 # Forms used by the app
@@ -352,6 +353,38 @@ class config(object):
 
         else:
             return "Ooops! Something went wrong."
+
+
+class query(object):
+    def GET(self, uuid):
+        for p in db.select('players', where = 'code = $uuid', vars = locals()):
+            player = p
+
+        name = player.name
+
+        stats = []
+        for stat in db.select('stats'):
+            default_value = stat.default_value
+            stat_name = stat.name 
+            stat_id = stat.id
+            sheet_stat = None
+            query = db.select('sheet',
+                              where = 'stat_id = $stat_id AND player_name = $name',
+                              vars = locals())
+
+            for elem in query:
+                sheet_stat = elem
+
+            if sheet_stat is not None:
+                stat_value = sheet_stat.value
+
+            else:
+                stat_value = default_value
+
+            stats.append(stat_name + ":" + str(stat_value))
+
+        result = name + "--" + ",".join(stats)
+        return result
 
 
 if __name__ == "__main__":
