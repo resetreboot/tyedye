@@ -2,7 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 import web
+import hashlib, time
 from web import form
+
 
 # Framework initialization
 
@@ -19,6 +21,7 @@ urls = (
     '/app/config/edit/(.+)', 'edit_stat',
     '/app/register', 'register',
     '/app/register/', 'register',
+    '/app/player/(.+)', 'player',
 )
 
 # Forms used by the app
@@ -43,18 +46,61 @@ def render_web(game_name, main_block):
     sidebar = render.sidebar()
     return render.layout(main_block, sidebar, game_name)
 
-def dynamic_register_form():
+def dynamic_register_form(player_name = 'New Player'):
     """
     Creates a register new player dynamicly
     """
     reg_elems = [form.Textbox('name',
-                              description = 'Player name:')]
+                              description = 'Player name:',
+                              value = player_name)]
 
-    for stat in db.select('stats'):
-        textbox = form.Textbox(stat.name,
-                               value = stat.default_value)
+    if player_name == 'New Player':
+        for stat in db.select('stats'):
+            reg_elems.append(form.Textbox(stat.name,
+                                   value = stat.default_value))
 
-    
+    else:
+        for stat in db.select('sheet', where = 'player_name = $player_name', vars = locals()):
+            stat_name, df_value = get_stat_info_by_id(stat.stat_id)
+            reg_elems.append(form.Textbox(stat_name,
+                                          value = stat.value))
+
+
+    if player_name == 'New Player':
+        reg_elems.append(form.Button('Register Player'))
+
+    else:
+        reg_elems.append(form.Button('Modify Player'))
+
+    reg_form = form.Form(*reg_elems)
+    return reg_form
+
+def generate_uuid(player_name):
+    """
+    Generates a unique id
+    """
+    full_string = str(time.time()) + "::" + player_name
+    hasher = hashlib.sha256()
+    hasher.update(full_string)
+    return hasher.hexdigest()
+
+def get_stat_info(stat_name):
+    """
+    Gets stat id and default value
+    """
+    for s in db.select('stats', where = "name = $stat_name", vars = locals()):
+        stat = s
+
+    return stat.id, stat.default_value
+
+def get_stat_info_by_id(stat_id):
+    """
+    Gets stat id and default value
+    """
+    for s in db.select('stats', where = "id = $stat_id", vars = locals()):
+        stat = s
+
+    return stat.name, stat.default_value
 
 # Server calls
 
@@ -161,6 +207,39 @@ class edit_stat(object):
         except Exception as e:
             return "Ooops! Wrong index! %s" % str(e)
 
+
+class register(object):
+    def GET(self):
+        game_name = "My Game"
+        form = dynamic_register_form()
+        register_block = render.register(form.render())
+        return render_web(game_name, register_block)
+
+    def POST(self):
+        game_name = "My Game"
+        stats = {}
+        form = dict(web.input())
+        name = form['name']
+        code = generate_uuid(name)
+        db.insert('players', name = name, code = code)
+
+        for key in form:
+            if key != 'name' and key != 'Register Player':
+                stat_id, default_value = get_stat_info(key)
+                if form[key] != '' and form[key] != '0':
+                    final_value = form[key]
+                
+                else:
+                    final_value = default_value
+
+                db.insert('sheet', 
+                          player_name = name,
+                          stat_id = stat_id,
+                          value = final_value)
+                stats[key] = final_value
+
+        result_render = render.player(name, code, stats)
+        return render_web(game_name, result_render)
 
 
 if __name__ == "__main__":
