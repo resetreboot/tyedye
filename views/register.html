@@ -1,0 +1,14 @@
+$def with (register_form, registering_new)
+$if registering_new:
+    <h2>Registering new player</h2>
+$else:
+    <h2>Modifying player</h2>
+<div class="register_form">
+    $if registering_new:
+        <form name="register_player_form" method="post" action="register">
+    $else:
+        <form name="edit_player_form" method="post" action="">
+
+    $:register_form
+    </form>
+</div>

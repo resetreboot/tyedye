@@ -1,0 +1,11 @@
+$def with (player_name, player_id, stats, edit_links)
+<h2>$player_name summary</h2>
+<p>Player UUID:
+<textarea style="width: 98%;">$player_id</textarea></p>
+<p>Player stats:<br />
+<ul>
+$for stat in stats:
+    <li>$stat: $stats[stat]</li>
+</ul>
+$if edit_links:
+    <p><a href="/app/player_edit/$player_name">[edit]</a>&nbsp;<a href="/app/player_remove/$player_name">[remove]</a></p>
