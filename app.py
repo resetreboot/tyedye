@@ -17,6 +17,8 @@ urls = (
     '/app/config/add', 'stat_add',
     '/app/config/remove/(.+)', 'remove_stat',
     '/app/config/edit/(.+)', 'edit_stat',
+    '/app/register', 'register',
+    '/app/register/', 'register',
 )
 
 # Forms used by the app
@@ -40,6 +42,19 @@ def render_web(game_name, main_block):
     """
     sidebar = render.sidebar()
     return render.layout(main_block, sidebar, game_name)
+
+def dynamic_register_form():
+    """
+    Creates a register new player dynamicly
+    """
+    reg_elems = [form.Textbox('name',
+                              description = 'Player name:')]
+
+    for stat in db.select('stats'):
+        textbox = form.Textbox(stat.name,
+                               value = stat.default_value)
+
+    
 
 # Server calls
 
