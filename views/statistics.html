@@ -1,12 +1,12 @@
 $def with (game_name, stats, add_stat_form)
 <h2>$game_name stat list</h2>
-<ul>
 $for stat in stats:
-    <li>$stat.name (default: $stat.default_value)
-        <a href="/app/stats/edit/$stat.id">[edit]</a>&nbsp;
-        <a href="/app/stats/remove/$stat.id">[remove]</a>
-    </li>
-</ul>
+    <div class="row">
+    <div class="span1">$stat.name</div>
+    <div class="span2">(default: $stat.default_value)</div>
+    <div class="span1"><a href="/app/stats/edit/$stat.id">[edit]</a></div>
+    <div class="span1"><a href="/app/stats/remove/$stat.id">[remove]</a></div>
+    </div>
 <div class="stat_form">
     <form name="add_stat_form" method="post" action="stats/add">
         $:add_stat_form
