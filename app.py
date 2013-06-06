@@ -189,7 +189,7 @@ class stat_add(object):
         if form.validates():
             db.insert('stats', name = form.d.stat_name, default_value = form.d.default_value)
 
-        raise web.seeother('/app/config')
+        raise web.seeother('/tyedye/config')
 
 
 class remove_stat(object):
@@ -201,7 +201,7 @@ class remove_stat(object):
             return "Ooops! Wrong index!"
 
         db.delete('stats', where = 'id = $index', vars = locals())
-        raise web.seeother('/app/config')
+        raise web.seeother('/tyedye/config')
 
 
 class edit_stat(object):
@@ -238,7 +238,7 @@ class edit_stat(object):
                           default_value = form.d.default_value, 
                           vars = locals())
 
-            raise web.seeother('/app/config')
+            raise web.seeother('/tyedye/config')
 
         except Exception as e:
             return "Ooops! Wrong index! %s" % str(e)
@@ -334,7 +334,7 @@ class remove_player(object):
         except:
             pass
 
-        raise web.seeother('/app')
+        raise web.seeother('/tyedye')
 
 
 class config(object):
@@ -349,7 +349,7 @@ class config(object):
             new_game_name = form.d.game_name
             db.delete('game_config', where = 'game_name = game_name')
             db.insert('game_config', game_name = new_game_name)
-            raise web.seeother('/app')
+            raise web.seeother('/tyedye')
 
         else:
             return "Ooops! Something went wrong."
