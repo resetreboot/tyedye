@@ -189,7 +189,7 @@ class stat_add(object):
         if form.validates():
             db.insert('stats', name = form.d.stat_name, default_value = form.d.default_value)
 
-        raise web.seeother('/tyedye/config')
+        raise web.seeother('/tyedye/stats')
 
 
 class remove_stat(object):
@@ -201,7 +201,7 @@ class remove_stat(object):
             return "Ooops! Wrong index!"
 
         db.delete('stats', where = 'id = $index', vars = locals())
-        raise web.seeother('/tyedye/config')
+        raise web.seeother('/tyedye/stats')
 
 
 class edit_stat(object):
@@ -238,7 +238,7 @@ class edit_stat(object):
                           default_value = form.d.default_value, 
                           vars = locals())
 
-            raise web.seeother('/tyedye/config')
+            raise web.seeother('/tyedye/stats')
 
         except Exception as e:
             return "Ooops! Wrong index! %s" % str(e)
