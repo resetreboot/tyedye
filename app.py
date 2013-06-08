@@ -27,6 +27,7 @@ urls = (
     '/tyedye/config', 'config',
     '/tyedye/config/', 'config',
     '/query/(.+)', 'query',
+    '/update/(.+)/(.+)/(.+)', 'script_update',
 )
 
 # Forms used by the app
@@ -384,8 +385,43 @@ class query(object):
             stats.append(stat_name + ":" + str(stat_value))
 
         result = name + "--" + ",".join(stats)
+        web.header("Content-Type", "text/plain")
         return result
 
+
+class script_update(object):
+    def GET(self, uuid, stat, value):
+        query = db.select('players', where = 'code = $uuid', vars = locals())
+        try:
+            stat_id, stat_def = get_stat_info(stat)
+
+        except:
+            return 'Error'
+
+        player = None
+        for p in query:
+            player = p
+
+        if player is not None:
+            player_name = player.name
+            sheet_stat = None
+            for s in db.select('sheet', where = "player_name = $player_name AND stat_id = $stat_id", vars = locals()):
+                sheet_stat = s
+
+            if sheet_stat is not None:
+                sheet_id = sheet_stat.id
+                db.update('sheet',
+                          where = 'id = $sheet_id',
+                          value = value,
+                          vars = locals())
+
+                return 'OK'
+            
+            else:
+                return 'Error'
+
+        else:
+            return 'Error'
 
 if __name__ == "__main__":
     # web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
