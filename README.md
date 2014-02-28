@@ -1,6 +1,8 @@
 TyeDye Roleplaying Character Cloud
 ==================================
 
+##### By José Carlos Cuevas Albadalejo &lt;reset [dot] reboot [at] gmail [dot] com&gt;
+
 TyeDye is a system for maintaining simple roleplaying characters on the cloud and sync it back to clients. 
 It allows for the clients to get the information and even to update it back to the system. 
 
