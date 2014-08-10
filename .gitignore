@@ -1,3 +1,7 @@
 *.pyc
 game.db
 views.bak/
+bin/
+include/
+lib/
+local/
