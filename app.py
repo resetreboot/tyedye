@@ -4,6 +4,7 @@
 import web
 import hashlib, time
 from web import form
+import json
 
 
 # Framework initialization
@@ -16,14 +17,10 @@ urls = (
     '/tyedye/', 'summary',
     '/tyedye/stats', 'statistics',
     '/tyedye/stats/', 'statistics',
-    '/tyedye/stats/add', 'stat_add',
-    '/tyedye/stats/remove/(.+)', 'remove_stat',
-    '/tyedye/stats/edit/(.+)', 'edit_stat',
     '/tyedye/register', 'register',
     '/tyedye/register/', 'register',
     '/tyedye/player/(.+)', 'player',
-    '/tyedye/player_remove/(.+)', 'remove_player',
-    '/tyedye/player_edit/(.+)', 'edit_player',
+    '/tyedye/players/', 'player_list',
     '/tyedye/config', 'config',
     '/tyedye/config/', 'config',
     '/query/(.+)', 'query',
@@ -161,10 +158,11 @@ class summary(object):
 
         # We render our main block and feed it to our 
         # Web renderer
-        summary = render.summary(game_name, 
-                                 player_num, 
-                                 stats_num, 
-                                 players)
+        # summary = render.summary(game_name, 
+        #                          player_num, 
+        #                          stats_num, 
+        #                          players)
+        summary = ''
         return render_web(summary)
 
 
@@ -175,13 +173,10 @@ class statistics(object):
         for stat in db.select("stats"):
             stats.append(stat)
 
-        add_stat_form = add_stat.render()
+        return json.dumps(stats)
 
-        config = render.statistics(game_name,
-                                   stats,
-                                   add_stat_form)
-
-        return render_web(config)
+    def POST(self):
+        pass
 
 
 class stat_add(object):
@@ -278,7 +273,7 @@ class register(object):
 
 
 class player(object):
-    def GET(self, player_name):
+    def GET(self, player_name = None):
         for p in db.select('players', where = 'name = $player_name', vars = locals()):
             player_data = p
 
@@ -293,6 +288,15 @@ class player(object):
 
         result_render = render.player(player_data.name, player_data.code, stats, True)
         return render_web(result_render)
+
+
+class player_list(object):
+    def GET(self):
+        players = []
+        for elem in db.select('players'):
+            players.append(dict(elem))
+
+        return json.dumps(players)
 
 
 class edit_player(object):

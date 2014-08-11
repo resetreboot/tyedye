@@ -1,4 +1,4 @@
-$def with (main_block, sidebar_block, game_name)
+$def with (main_block,sidebar_block, game_name)
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,7 +6,7 @@ $def with (main_block, sidebar_block, game_name)
         <title>TyeDye control panel for $game_name</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- <link rel='stylesheet' type='text/css' href='/static/public/main.css'> -->
-        <link href="/static/static/public/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/public/css/bootstrap.min.css" rel="stylesheet">
         <style type="text/css">
           body {
             padding-top: 60px;
@@ -74,6 +74,17 @@ $def with (main_block, sidebar_block, game_name)
                 </div>
                 <div class='span9'>
                     $:main_block
+                    <!-- Out main app blocks are now in control of our backbone app -->
+                    <div id="player_list"></div>
+                    <script type="text/template" id="player_list_template">
+                        <h2>$game_name quick summary</h2>
+                        <p>Registered players: <%= player_num %></p>
+                        <p>Registered stats: <%= stats_num %></p>
+                        <p>Player list:<br />
+                        <ul id="player_ul_list">
+                        <%= listUlPlayer(player_collection) %>
+                        </ul>
+                    </script>
                 </div>
             </div>
             <hr />
