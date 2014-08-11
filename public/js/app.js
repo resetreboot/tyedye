@@ -1,7 +1,7 @@
 // Model definition
 
 var Stat = Backbone.Model.extend({
-      urlRoot: '/tyedye/stat',
+      urlRoot: '/tyedye/stat/',
       defaults: {
             name: 'New Stat',
             value: 0,
@@ -14,9 +14,28 @@ var Stat = Backbone.Model.extend({
 
 var Stats = Backbone.Collection.extend({
     model: Stat,
-    url: "/tyedye/stats/",
-    initialize: function () {
-        this.fetch();
+    url: function () {
+        if (this.generic) {
+            return "/tyedye/stats/";
+        } else {
+            return "/tyedye/stats/" + this.id;
+        }
+    },
+    initialize: function (models, player_id) {
+        this.generic = true;
+        if (typeof player_id != 'undefined') {
+            this.id = player_id;
+            this.generic = false;
+        }
+        this.fetch({ reset: true });
+        if (!this.generic) {
+            this.on('reset', function () {
+                this.each(function (statistic) {
+                    $("#player_stats" + this.id )
+                      .append('<label>' + statistic.name + '</label><input type="text" name="' + statistic.name + this.id + '">');
+                });
+            });
+        }
     }
 });
 
@@ -25,9 +44,14 @@ var Player = Backbone.Model.extend({
     defaults: {
             name: 'New Player',
             stats: new Stats,
+            code: 0,
     },
     initialize: function () {
-        this.on("change", function (model) {});
+        // this.on("change", function (model) {});
+        if (this.get('code') != 0) {
+            var player_stats = new Stats([], this.get('code'));
+            this.set('stats', player_stats);
+        }
     }
 });
 
@@ -35,7 +59,7 @@ var Players = Backbone.Collection.extend({
     model: Player,
     url: "/tyedye/players/",
     initialize: function () {
-        this.fetch();
+        this.fetch({ reset: true });
     }
 });
 
@@ -63,26 +87,20 @@ Backbone.history.start({root: '/tyedye'});
 
 var PlayerListView = Backbone.View.extend({
     initialize: function () {
-        this.listenTo(this.collection, 'add', this.render);
+        this.listenTo(this.collection, 'reset', this.render);
     },
     collection: players,
     render: function () {
         // Load and compile the template
-        var template = _.template( $("#player_list_template").html(), { 'player_collection' : players,
-                                                                        'player_num' : this.collection.length,
-                                                                        'stats_num' : stats.length } );
+        var template = _.template( $("#player_list_template").html(), {});
         // Put the compiled html into our 'el' element, putting in on the webpage
         this.$el.html(template);
+
+        this.collection.each(function (playerItem) {
+            $("div#player_ul_list").append('<h3 style="font-size: large;"><a href="/tyedye/#/player/' + playerItem.get('code') + '/">' + playerItem.get('name') + '</a></h3><div id="player_stats' + playerItem.get('code') + '" style="display: none;"></div>');
+        });
+        $("#player_number").text(this.collection.length);
     }
 });
 
 var player_list_view = new PlayerListView({ el: $("#player_list") });
-
-function listUlPlayer (listPlayers) {
-    var html = '';
-    listPlayers.each(function (item) {
-      html += '<li><a href="/tyedye/player/' + item.code '">' + item.name + '</a></li>';
-    };
-    return html;
-    }
-

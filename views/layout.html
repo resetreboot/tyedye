@@ -38,6 +38,9 @@ $def with (main_block,sidebar_block, game_name)
           <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/public/ico/apple-touch-icon-72-precomposed.png">
                         <link rel="apple-touch-icon-precomposed" href="/static/public/ico/apple-touch-icon-57-precomposed.png">
                                        <link rel="shortcut icon" href="/static/public/ico/favicon.png">
+
+        <!-- jQuery UI -->
+        <link href="/static/public/jquery-ui/jquery-ui.css" rel="stylesheet">
     </head>
     <body>
         <!-- begin navbar -->
@@ -75,15 +78,14 @@ $def with (main_block,sidebar_block, game_name)
                 <div class='span9'>
                     $:main_block
                     <!-- Out main app blocks are now in control of our backbone app -->
+                    <h2>$game_name quick summary</h2>
+                    <p>Registered players: <span id="player_number">0</span></p>
+                    <p>Registered stats: <span id="stat_number">0</span></p>
                     <div id="player_list"></div>
                     <script type="text/template" id="player_list_template">
-                        <h2>$game_name quick summary</h2>
-                        <p>Registered players: <%= player_num %></p>
-                        <p>Registered stats: <%= stats_num %></p>
                         <p>Player list:<br />
-                        <ul id="player_ul_list">
-                        <%= listUlPlayer(player_collection) %>
-                        </ul>
+                        <div id="player_ul_list">
+                        </div>
                     </script>
                 </div>
             </div>

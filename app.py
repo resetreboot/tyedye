@@ -17,6 +17,7 @@ urls = (
     '/tyedye/', 'summary',
     '/tyedye/stats', 'statistics',
     '/tyedye/stats/', 'statistics',
+    '/tyedye/stats/(.+)', 'statistics',
     '/tyedye/register', 'register',
     '/tyedye/register/', 'register',
     '/tyedye/player/(.+)', 'player',
@@ -167,13 +168,33 @@ class summary(object):
 
 
 class statistics(object):
-    def GET(self):
-        game_name = get_game_name()
+    def GET(self, player_id = None):
         stats = []
-        for stat in db.select("stats"):
-            stats.append(stat)
+        if not player_id:
+            for stat in db.select("stats"):
+                stats.append(stat)
 
-        return json.dumps(stats)
+            return json.dumps(stats)
+
+        else:
+            for p in db.select('players', where = 'code = $player_id', vars = locals()):
+                player_data = dict(p)
+
+            player_name = player_data['name']
+            print player_name
+
+            for s in db.select('sheet', where = 'player_name = $player_name', vars = locals()):
+                try:
+                    stats_val = dict()
+                    stat_name, def_val = get_stat_info_by_id(s.stat_id)
+                    stats_val[stat_name] = s.value
+                    stats.append(stats_val)
+
+                except Exception as e:
+                    continue
+
+            return json.dumps(stats)
+            
 
     def POST(self):
         pass
